@@ -1,0 +1,56 @@
+body {
+	background-color: #000000;
+}
+
+.background {
+	min-height: 100vh;
+	background-image: url("../images/startGameBackground.jpg");
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	background-size: cover;
+}
+
+.backgroundL {
+	min-height: 100vh;
+	background-image: url("../images/lightSideBackground.jpg");
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	background-size: cover;
+}
+
+.backgroundD {
+	min-height: 100vh;
+	background-image: url("../images/darkSideBackground.jpg");
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	background-size: cover;
+}
+
+.characterPool {
+	display: flex;
+}
+
+.character {
+	margin: 5px;
+	flex: 1;
+}
+
+.battleground {
+	display: flex;
+}
+
+.mainChar {
+	flex: 1;
+	justify-content: flex-start;
+	width: 50vw;
+}
+
+.enemyChar {
+	flex: 1;
+	justify-content: flex-end;
+	width: 50vw;
+}
+
+.img {
+	max-width: 250px;
+}
