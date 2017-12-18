@@ -1,72 +1,57 @@
 $(document).ready();
-
-var skywalker = document.getElementById('#lukeSkywalker');
-var kenobi = document.getElementById('#obiWanKenobi');
-var palpatine = document.getElementById('#darthSidious');
-var redAlien = document.getElementById('#angryRedAlienDude');
-
-
 var luke = {
-	Name: 'Luke Skywalker',
-	Health: 100,
-	Attack: 12,
+	name: 'Luke Skywalker',
+	health: 100,
+	attack: 12,
 	cAttack: 12,
-	image: skywalker,
 	battle: function() {
 
-		this.Attack = this.Attack + 12;
-	},
+		this.attack += 12;
+	}, 
 
 };
 
 var obi = {
-	Name: 'Obi Wan Kenobi',
-	Health: 120,
-	Attack: 10,
+	name: 'Obi Wan Kenobi',
+	health: 160,
+	attack: 10,
 	cAttack: 10,
-	image: kenobi,
 	battle: function() {
 
 		//this.Health = this.Health - ;
-		this.Attack = this.Attack + 10;
+		this.attack += 10;
+
 
 	},
 
 };
 var sidious = {
-	Name: 'Darth Sidious',
-	Health: 150,
-	Attack: 15,
+	name: 'Darth Sidious',
+	health: 150,
+	attack: 15,
 	cAttack: 15,
-	image: palpatine,	
 	battle: function() {
 
 		//this.Health = this.Health - ;
-		this.Attack = this.Attack + 15;
+		this.attack += 15;
 	},
 
 };
 var maul = {
-	Name: 'Darth Maul',
-	Health: 100,
-	Attack: 20,
+	name: 'Darth Maul',
+	health: 100,
+	attack: 20,
 	cAttack: 20,
-	image: redAlien,
 	battle: function() {
 
 		//this.Health = this.Health - ;
-		this.Attack = this.Attack + 10
+		this.attack += 10
 	}
 
 };	
 
-var heroArray = [luke, obi, sidious, maul]
-var lukeSkywalker = $('#lukeSkywalker');
-var obiWanKenobi = $('#obiWanKenobi');
-var darthMaul = $('#darthMaul');
-var angryRedAlienDude = $('#angryRedAlienDude');
-var mainChar = false;
-var enemyChar =false; 
+var mainPlayer = {};
+var enemyPlayer = {};
 
 // var darkSideAudio = document.createElement("audio");
 //       darkSideAudio.setAttribute("src", "../darkSideRemix.mp3");
@@ -84,65 +69,88 @@ var enemyChar =false;
 
 //This is where we will be making the main character and the enemy character
 $('.character').on('click', function() {
-		if ($(this).hasClass('lightSide')) {
+	if (!jQuery.isEmptyObject(enemyPlayer) || $(this).hasClass('dead')) {return};
+	var backgroundType = '';
+	if ($(this).hasClass('lightSide')) {
+		backgroundType = 'lightSide';
+	};
+
+	if (jQuery.isEmptyObject(mainPlayer)) {
+
+		changeBackground(backgroundType);
+		mainPlayer = assignChar($(this).attr('id'));
+		$(this).addClass('mainChar');
+		
+	} else {
+
+		enemyPlayer = assignChar($(this).attr('id'));
+		$(this).addClass('enemyChar');
+
+	};
+	$(this).removeClass('character');
+	$(this).appendTo($('.battleground'));
+});
+
+function changeBackground(forceSide) {
+
+
+	var musicSrc = ''
+
+	if (forceSide === 'lightSide') {
+		musicSrc = './assets/lightSideRemix.mp3';
 		$('.background').addClass('backgroundL');
 		$('.background').removeClass('background');
+
 	} else {
+		musicSrc = './assets/darkSideRemix.mp3';
 		$('.background').addClass('backgroundD');
 		$('.background').removeClass('background');	
 	};
 
-	if (mainChar === false) {
+	$('body').append('<audio src="' + musicSrc + '" autoplay loop></audio>');
+};
 
-		$(this).appendTo($('.mainCharPool'));
-		$(this).addClass('mainChar');
-		$(this).removeClass('character');
+// This is where we will switch between the IDs of the main Player
+function assignChar(characterId) {
+	switch (characterId) {
 
-
-
-		mainChar = true;
-		return mainChar;
-	};
-
-	if (enemyChar === false && mainChar === true) {
-
-		$(this).appendTo($('.enemyCharPool'));
-		$(this).addClass('enemyChar');
-		$(this).removeClass('character');
-
-		enemyChar = true;
-	};
-});
-
-
+		case  'lukeSkywalker':
+			return luke;
+		case 'obiWanKenobi':
+			return obi;
+		case 'darthSidious':
+			return sidious
+		case 'angryRedAlienDude':
+			return maul;
+		default:
+			return false;
+	}
+};
 
 
 
 //Combat Mechanics
 $('.button').on('click', function() {
-	
-	if ($('.mainChar').has('#lukeSkywalker')) {
-			luke.battle();
-			console.log(luke.Attack);
-		} else if ($('.mainChar').has('#obiWanKenobi')) {
-			obi.battle();
-			console.log(obi.Attack);
-		} else if ($('.mainChar').has('#darthSidious')) {
-			sidious.battle();
-			console.log(sidious.Attack);
-		} else if ($('.mainChar').has('#angryRedAlienDude')) {
-			maul.battle();
-			console.log(maul.Attack);
-	};
-	
-	if ($('.enemyChar').has('#lukeSkywalker')) {
-	 		luke.counter();
-	 	} else if ($('.mainChar').has('#obiWanKenobi')) {
-			obi.counter();
-	 	} else if ($('.mainChar').has('#darthSidious')) {
-	 		sidious.counter();
-	 	} else if ($('.mainChar').has('#angryRedAlienDude')) {
-	 		maul.counter();
-	};
 
- 
+	if (enemyPlayer.health <= 0) {
+		mainPlayer.health = 0;
+		return;
+	}	
+	
+if (jQuery.isEmptyObject(enemyPlayer)) {return}
+	enemyPlayer.health -= mainPlayer.attack;
+	mainPlayer.health -= enemyPlayer.cAttack;
+	mainPlayer.battle();
+	console.log('Protag Health: ' + mainPlayer.health);
+	console.log('Enemy Health: ' + enemyPlayer.health);
+	console.log('Attack stat: ' + mainPlayer.attack);
+
+	if (enemyPlayer.health <= 0) {
+		enemyPlayer.health = 0;
+		$('.enemyChar').addClass('dead');
+		$('.enemyChar').removeClass('enemyChar');
+		$('.dead').appendTo($('.graveyard'));
+		enemyPlayer = {};
+	}
+
+});

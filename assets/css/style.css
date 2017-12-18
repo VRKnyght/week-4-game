@@ -37,20 +37,22 @@ body {
 
 .battleground {
 	display: flex;
+	justify-content: space-around;
+	min-width: 100vw;
 }
 
-.mainChar {
-	flex: 1;
-	justify-content: flex-start;
-	width: 50vw;
+.mainChar {/*
+	flex: 1;*/
+	/*align-self: flex-start;
+*/
 }
 
-.enemyChar {
-	flex: 1;
-	justify-content: flex-end;
-	width: 50vw;
-}
+.enemyChar {/*
+	flex: 1;*/
+/*	align-self: flex-end;
+*/}
 
 .img {
 	max-width: 250px;
 }
+
